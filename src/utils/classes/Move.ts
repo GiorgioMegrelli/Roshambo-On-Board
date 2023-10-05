@@ -4,7 +4,7 @@ import Degrees from "./Degrees";
 class Move {
     currCoords: Coords;
     degrees: Degrees;
-    offset: number;
+    length: number;
 }
 
 export default Move;

@@ -10,7 +10,7 @@ class Canvas implements ICanvas {
     static readonly HEIGHT_MIN_MAX = [
         Canvas.BORDER, Canvas.HEIGHT - Canvas.BORDER,
     ];
-    static readonly CENTER_SIZE = 20;
+    static readonly CENTER_SIZE = 30;
 
     private canvas: HTMLElement;
 

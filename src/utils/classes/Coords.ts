@@ -7,6 +7,12 @@ class Coords {
         this.y = y;
     }
 
+    offset(offsetX: number, offsetY: number): Coords {
+        return new Coords(
+            this.x + offsetX, this.y + offsetY,
+        );
+    }
+
     toArray(): number[] {
         return [this.x, this.y];
     }

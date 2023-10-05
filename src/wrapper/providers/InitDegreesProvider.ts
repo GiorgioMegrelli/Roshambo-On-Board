@@ -1,5 +1,5 @@
-import Degrees from "../utils/classes/Degrees";
-import { getRandomInt } from "../utils/functions/random";
+import Degrees from "../../utils/classes/Degrees";
+import { getRandomInt } from "../../utils/functions/random";
 
 export interface InitDegreesProvider {
     nextValue(): Degrees;

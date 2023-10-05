@@ -1,5 +1,5 @@
-import Coords from "../utils/classes/Coords";
-import { getRandomInt } from "../utils/functions/random";
+import Coords from "../../utils/classes/Coords";
+import { getRandomInt } from "../../utils/functions/random";
 
 export interface InitCoordsProvider {
     nextValue(): Coords;

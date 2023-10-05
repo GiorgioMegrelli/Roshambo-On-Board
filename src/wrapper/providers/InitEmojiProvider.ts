@@ -1,4 +1,4 @@
-import { EMOJI_PAPER, EMOJI_ROCK, EMOJI_SCISSORS } from "../const/emojis";
+import { EMOJI_PAPER, EMOJI_ROCK, EMOJI_SCISSORS } from "../../const/emojis";
 
 export interface InitValueProvider {
     nextValue(): string;
