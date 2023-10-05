@@ -2,13 +2,13 @@ import Canvas from "../canvas/Canvas";
 import Coords from "../utils/classes/Coords";
 import Degrees from "../utils/classes/Degrees";
 import { px } from "../utils/functions/style-units";
-import { BoundingSquare } from "./BoundingSpace";
+import { BoundingSpace } from "./BoundingSpace";
 
 class EmojiWrapper {
-    value: string;
-    container: HTMLDivElement;
-    coords: Coords;
-    degrees: Degrees;
+    private value: string;
+    private container: HTMLDivElement;
+    private coords: Coords;
+    private degrees: Degrees;
 
     constructor(
         initValue: string,
@@ -28,6 +28,10 @@ class EmojiWrapper {
         this.container.innerHTML = value;
     }
 
+    getValue(): string {
+        return this.value;
+    }
+
     redraw() {
         const width = this.container.offsetWidth;
         const height = this.container.offsetHeight;
@@ -36,10 +40,35 @@ class EmojiWrapper {
         styles.top = px(this.coords.y - height / 2);
     }
 
-    getBoundingSquare(): BoundingSquare {
-        return new BoundingSquare(
-            new Coords(this.coords.x, this.coords.y), Canvas.CENTER_SIZE
+    getContainer(): HTMLElement {
+        return this.container;
+    }
+
+    getBoundingSpace(): BoundingSpace {
+        return new BoundingSpace(
+            Coords.of(this.coords.x, this.coords.y),
+            Canvas.CENTER_SIZE,
+            Canvas.CENTER_SIZE,
         );
+    }
+
+    setCoords(coords: Coords) {
+        this.coords = coords;
+    }
+
+    getCoords(): Coords {
+        return this.coords;
+    }
+
+    nextCoords(distance: number): Coords {
+        const offsetX = Math.round(
+            this.degrees.cos() * distance,
+        );
+        const offsetY = Math.round(
+            this.degrees.sin() * distance,
+        );
+
+        return this.coords.offset(offsetX, offsetY);
     }
 
 }

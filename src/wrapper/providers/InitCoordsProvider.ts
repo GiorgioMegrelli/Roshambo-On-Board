@@ -47,6 +47,6 @@ export class RandomInitCoordsProvider implements InitCoordsProvider {
     nextValue(): Coords {
         const x = getRandomInt(this.minWidth, this.maxWidth);
         const y = getRandomInt(this.minHeight, this.maxHeight);
-        return new Coords(x, y);
+        return Coords.of(x, y);
     }
 }

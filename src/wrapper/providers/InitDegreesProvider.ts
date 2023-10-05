@@ -8,7 +8,7 @@ export interface InitDegreesProvider {
 export class D360InitDegreesProvider implements InitDegreesProvider {
     nextValue(): Degrees {
         return new Degrees(
-            getRandomInt(0, 360)
+            getRandomInt(360)
         );
     }
 }

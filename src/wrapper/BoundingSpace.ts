@@ -11,27 +11,29 @@ export class BoundingPoint {
     }
 }
 
-export class BoundingSquare {
+export class BoundingSpace {
     private readonly center: Coords;
-    private readonly halfSize: number;
+    private readonly halfWidth: number;
+    private readonly halfHeight: number;
 
-    constructor(center: Coords, squareSize: number) {
+    constructor(center: Coords, width: number, height: number) {
         this.center = center;
-        this.halfSize = Math.floor(squareSize / 2);
+        this.halfWidth = Math.floor(width / 2);
+        this.halfHeight = Math.floor(height / 2);;
     }
 
-    containsPoint(point: BoundingPoint): boolean {
-        const minX = this.center.x - this.halfSize;
-        const maxX = this.center.x + this.halfSize;
-        const minY = this.center.y - this.halfSize;
-        const maxY = this.center.y + this.halfSize;
-        const x = point.point.x;
-        const y = point.point.y;
+    containsPoint(point: Coords | BoundingPoint): boolean {
+        const minX = this.center.x - this.halfWidth;
+        const maxX = this.center.x + this.halfWidth;
+        const minY = this.center.y - this.halfHeight;
+        const maxY = this.center.y + this.halfHeight;
+        const x = (point instanceof Coords)? point.x: point.point.x;
+        const y = (point instanceof Coords)? point.y: point.point.y;
         return minX < x && x < maxX
             && minY < y && y < maxY;
     }
 
-    hasOverlay(other: BoundingSquare): boolean {
+    hasOverlay(other: BoundingSpace): boolean {
         const otherCorners = other.getCorners();
         for(let i = 0; i < otherCorners.length; i++) {
             if(this.containsPoint(otherCorners[i])) {
@@ -43,17 +45,16 @@ export class BoundingSquare {
 
     getTopLeft(): Coords {
         return this.center.offset(
-            -this.halfSize, -this.halfSize,
+            -this.halfWidth, -this.halfHeight,
         );
     }
 
     getCorners(): BoundingPoint[] {
-        const halfSize = this.halfSize;
         return [
-            [-halfSize, -halfSize, Direction.NORTH_WEST],
-            [halfSize, -halfSize, Direction.NORTH_EAST],
-            [halfSize, halfSize, Direction.SOUTH_EAST],
-            [-halfSize, halfSize, Direction.SOUTH_WEST],
+            [-this.halfWidth, -this.halfHeight, Direction.NORTH_WEST],
+            [this.halfWidth, -this.halfHeight, Direction.NORTH_EAST],
+            [this.halfWidth, this.halfHeight, Direction.SOUTH_EAST],
+            [-this.halfWidth, this.halfHeight, Direction.SOUTH_WEST],
         ].map((arr) => {
             const [offsetX, offsetY, dir] = arr;
             return new BoundingPoint(
@@ -63,12 +64,11 @@ export class BoundingSquare {
     }
 
     getEdges(): BoundingPoint[] {
-        const halfSize = this.halfSize;
         return [
-            [0, -halfSize, Direction.NORTH],
-            [halfSize, 0, Direction.EAST],
-            [0, halfSize, Direction.SOUTH],
-            [-halfSize, 0, Direction.WEST],
+            [0, -this.halfHeight, Direction.NORTH],
+            [this.halfWidth, 0, Direction.EAST],
+            [0, this.halfHeight, Direction.SOUTH],
+            [-this.halfWidth, 0, Direction.WEST],
         ].map((arr) => {
             const [offsetX, offsetY, dir] = arr;
             return new BoundingPoint(
@@ -76,4 +76,20 @@ export class BoundingSquare {
             );
         });
     }
+
+    static fromTopLeft(
+        topLeft: Coords,
+        width: number,
+        height: number,
+    ): BoundingSpace {
+        const center = topLeft.offset(
+            Math.floor(width / 2),
+            Math.floor(height / 2),
+        );
+
+        return new BoundingSpace(
+            center, width, height,
+        );
+    }
+
 }

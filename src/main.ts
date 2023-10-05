@@ -6,8 +6,11 @@ import { RandomInitCoordsProvider } from "./wrapper/providers/InitCoordsProvider
 import { D360InitDegreesProvider } from "./wrapper/providers/InitDegreesProvider";
 import { CyclicInitValueProvider } from "./wrapper/providers/InitEmojiProvider";
 import EmojiWrapperFactory from "./wrapper/EmojiWrapperFactory";
+import { EMOJIS } from "./const/emojis";
 
-const MAX_EMOJI_SIZE = 30;
+const VARIATION = 5;
+const MAX_EMOJI_SIZE = EMOJIS.length * VARIATION;
+
 const FACTORY = new EmojiWrapperFactory(
     new CyclicInitValueProvider(),
     new RandomInitCoordsProvider(
@@ -22,9 +25,11 @@ const FACTORY = new EmojiWrapperFactory(
 const main = () => {
     const canvas: ICanvas = new Canvas();
     const controller = new EmojiController(canvas);
+
     FACTORY.createN(MAX_EMOJI_SIZE).forEach((wrapper) => {
         controller.register(wrapper);
     });
+    controller.nextStep();
 };
 
 window.addEventListener("load", main);

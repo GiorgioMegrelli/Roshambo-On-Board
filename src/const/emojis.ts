@@ -1,6 +1,9 @@
 export const EMOJI_ROCK = "🪨";
 export const EMOJI_SCISSORS = "✂️";
 export const EMOJI_PAPER = "📜";
+export const EMOJIS = [
+    EMOJI_ROCK, EMOJI_SCISSORS, EMOJI_PAPER,
+];
 export const EMOJI_RULES = {
     [EMOJI_ROCK]: {
         [EMOJI_PAPER]: -1,

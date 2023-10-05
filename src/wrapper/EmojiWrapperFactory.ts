@@ -3,7 +3,7 @@ import { InitDegreesProvider } from "./providers/InitDegreesProvider";
 import { InitValueProvider } from "./providers/InitEmojiProvider";
 import EmojiWrapper from "./EmojiWrapper";
 import Canvas from "../canvas/Canvas";
-import { shuffle } from "../utils/functions/random";
+import { getRandomInt, shuffle } from "../utils/functions/random";
 import Coords from "../utils/classes/Coords";
 
 class EmojiWrapperFactory {
@@ -33,21 +33,22 @@ class EmojiWrapperFactory {
     createN(n: number): EmojiWrapper[] {
         const [widthMin, widthMax] = Canvas.WIDTH_MIN_MAX;
         const [heightMin, heightMax] = Canvas.HEIGHT_MIN_MAX;
+        const alpha = Canvas.CENTER_SIZE + 10;
         const result = [];
-        for(let i = widthMin; i <= widthMax - Canvas.CENTER_SIZE; i += Canvas.CENTER_SIZE) {
-            for(let j = heightMin; j <= heightMax - Canvas.CENTER_SIZE; j += Canvas.CENTER_SIZE) {
+        for(let i = widthMin; i <= widthMax; i += alpha) {
+            for(let j = heightMin; j <= heightMax; j += alpha) {
                 result.push([i, j]);
             }
         }
 
         if(result.length < n) {
-            throw new Error("Number of possible location is greater than " + n);
+            throw new Error("Number of possible location is less than " + n);
         }
 
         return shuffle(result).slice(0, n).map(coords => {
             return new EmojiWrapper(
                 this.initValueProvider.nextValue(),
-                new Coords(coords[0], coords[1]),
+                Coords.of(coords[0], coords[1]),
                 this.initDegreesProvider.nextValue(),
             );
         });
