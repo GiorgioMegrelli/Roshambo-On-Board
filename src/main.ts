@@ -1,3 +1,4 @@
+import "./loader";
 import Canvas from "./canvas/Canvas";
 import ICanvas from "./canvas/ICanvas";
 import EmojiController from "./controller/EmojiController";
