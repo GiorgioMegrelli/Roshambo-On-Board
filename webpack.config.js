@@ -13,6 +13,7 @@ const buildDir = tsConfig["compilerOptions"]["outDir"];
 module.exports = {
     entry: "./src/main.ts",
     mode: "development",
+    cache: false,
     output: {
         filename: "source.js",
         path: path.resolve(__dirname, buildDir),
