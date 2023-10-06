@@ -13,11 +13,15 @@ export class BoundingPoint {
 
 export class BoundingSpace {
     private readonly center: Coords;
+    private readonly width: number;
+    private readonly height: number;
     private readonly halfWidth: number;
     private readonly halfHeight: number;
 
     constructor(center: Coords, width: number, height: number) {
         this.center = center;
+        this.width = width;
+        this.height = height;
         this.halfWidth = Math.floor(width / 2);
         this.halfHeight = Math.floor(height / 2);;
     }
@@ -55,7 +59,7 @@ export class BoundingSpace {
             [this.halfWidth, -this.halfHeight, Direction.NORTH_EAST],
             [this.halfWidth, this.halfHeight, Direction.SOUTH_EAST],
             [-this.halfWidth, this.halfHeight, Direction.SOUTH_WEST],
-        ].map((arr) => {
+        ].map((arr: [number, number, string]) => {
             const [offsetX, offsetY, dir] = arr;
             return new BoundingPoint(
                 this.center.offset(offsetX, offsetY), dir,
@@ -69,12 +73,20 @@ export class BoundingSpace {
             [this.halfWidth, 0, Direction.EAST],
             [0, this.halfHeight, Direction.SOUTH],
             [-this.halfWidth, 0, Direction.WEST],
-        ].map((arr) => {
+        ].map((arr: [number, number, string]) => {
             const [offsetX, offsetY, dir] = arr;
             return new BoundingPoint(
                 this.center.offset(offsetX, offsetY), dir,
             );
         });
+    }
+
+    getWidth(): number {
+        return this.width;
+    }
+
+    getHeight(): number {
+        return this.height;
     }
 
     static fromTopLeft(

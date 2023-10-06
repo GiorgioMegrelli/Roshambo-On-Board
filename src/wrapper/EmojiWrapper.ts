@@ -13,7 +13,7 @@ class EmojiWrapper {
     constructor(
         initValue: string,
         coords: Coords,
-        degrees: Degrees = new Degrees(0),
+        degrees: Degrees,
     ) {
         this.value = initValue;
         this.container = document.createElement("div");
@@ -69,6 +69,14 @@ class EmojiWrapper {
         );
 
         return this.coords.offset(offsetX, offsetY);
+    }
+
+    bouncingBack(dir: string) {
+        console.log(
+            Degrees.bounceBack(
+                this.degrees, dir,
+            )
+        )
     }
 
 }

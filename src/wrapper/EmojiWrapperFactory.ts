@@ -3,7 +3,7 @@ import { InitDegreesProvider } from "./providers/InitDegreesProvider";
 import { InitValueProvider } from "./providers/InitEmojiProvider";
 import EmojiWrapper from "./EmojiWrapper";
 import Canvas from "../canvas/Canvas";
-import { getRandomInt, shuffle } from "../utils/functions/random";
+import { shuffle } from "../utils/functions/random";
 import Coords from "../utils/classes/Coords";
 
 class EmojiWrapperFactory {
@@ -22,12 +22,8 @@ class EmojiWrapperFactory {
     }
 
     create(): EmojiWrapper {
-        const value = this.initValueProvider.nextValue();
         const coords = this.initCoordsProvider.nextValue();
-        const degrees = this.initDegreesProvider.nextValue();
-        return new EmojiWrapper(
-            value, coords, degrees,
-        );
+        return this.createWrapper(coords);
     }
 
     createN(n: number): EmojiWrapper[] {
@@ -46,12 +42,18 @@ class EmojiWrapperFactory {
         }
 
         return shuffle(result).slice(0, n).map(coords => {
-            return new EmojiWrapper(
-                this.initValueProvider.nextValue(),
+            return this.createWrapper(
                 Coords.of(coords[0], coords[1]),
-                this.initDegreesProvider.nextValue(),
             );
         });
+    }
+
+    private createWrapper(coords: Coords): EmojiWrapper {
+        return new EmojiWrapper(
+            this.initValueProvider.nextValue(),
+            coords,
+            this.initDegreesProvider.nextValue(),
+        );
     }
 
 }

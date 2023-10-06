@@ -1,24 +1,46 @@
 import Canvas from "../canvas/Canvas";
 import ICanvas from "../canvas/ICanvas";
 import Coords from "../utils/classes/Coords";
+import Direction from "../utils/classes/Direction";
 import { BoundingSpace } from "../wrapper/BoundingSpace";
 import EmojiWrapper from "../wrapper/EmojiWrapper";
 
-class EmojiController {
-    private static readonly BORDERS: BoundingSpace[] = [
+const BORDERS: [BoundingSpace, string][] = [
+    [
         BoundingSpace.fromTopLeft(
             Coords.of(0, 0), Canvas.BORDER, Canvas.HEIGHT,
         ),
+        Direction.WEST,
+    ], [
         BoundingSpace.fromTopLeft(
             Coords.of(0, 0), Canvas.WIDTH, Canvas.BORDER,
         ),
+        Direction.NORTH,
+    ], [
         BoundingSpace.fromTopLeft(
             Coords.of(Canvas.WIDTH_MIN_MAX[1], 0), Canvas.BORDER, Canvas.HEIGHT,
         ),
+        Direction.EAST,
+    ], [
         BoundingSpace.fromTopLeft(
             Coords.of(0, Canvas.HEIGHT_MIN_MAX[1]), Canvas.WIDTH, Canvas.BORDER,
         ),
-    ];
+        Direction.SOUTH,
+    ],
+];
+
+const countInBorders = (coords: Coords): string[] => {
+    const result: string[] = [];
+    for(const [border, dir] of BORDERS) {
+        if(border.containsPoint(coords)) {
+            result.push(dir);
+        }
+    }
+    return result;
+};
+
+class EmojiController {
+    static readonly OFFSET = 2;
 
     private readonly canvas: ICanvas;
     private readonly wrappers: EmojiWrapper[];
@@ -45,16 +67,19 @@ class EmojiController {
     nextStep() {
         const interval = setInterval(() => {
             this.wrappers.forEach((wrapper) => {
-                const nextCoords = wrapper.nextCoords(1);
-                if(!EmojiController.inBorders(nextCoords)) {
+                const nextCoords = wrapper.nextCoords(EmojiController.OFFSET);
+                const dirs = countInBorders(nextCoords);
+                if(dirs.length === 0) {
                     wrapper.setCoords(nextCoords);
                     wrapper.redraw();
+                } else {
+                    wrapper.bouncingBack(dirs[0]);
                 }
             });
-        }, 25);
+        }, 40);
         setTimeout(() => {
             clearInterval(interval);
-        }, 5000);
+        }, 7000);
     }
 
     private computeKey(wrapper: EmojiWrapper): string {
@@ -62,14 +87,6 @@ class EmojiController {
         return coords.x + ":" + coords.y;
     }
 
-    private static inBorders(coords: Coords): boolean {
-        for(const border of EmojiController.BORDERS) {
-            if(border.containsPoint(coords)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
 
 export default EmojiController;
