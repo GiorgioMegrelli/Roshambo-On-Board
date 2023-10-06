@@ -102,6 +102,9 @@ class EmojiController implements ISimulationController {
         }
 
         this.invokeListeners();
+        if(this.isWin()) {
+            this.stop();
+        }
     }
 
     startSimulation() {
@@ -129,6 +132,14 @@ class EmojiController implements ISimulationController {
         for(const listener of this.listeners) {
             listener.update(this);
         }
+    }
+
+    private isWin(): boolean {
+        const freqs = this.getEmojiFrequencies().getFrequencies();
+        return Object.entries(freqs).some((val) => {
+            const [_, freq] = val;
+            return freq === this.wrappers.length;
+        });
     }
 
 }
