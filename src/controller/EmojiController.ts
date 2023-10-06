@@ -1,5 +1,6 @@
 import Canvas from "../canvas/Canvas";
 import ICanvas from "../canvas/ICanvas";
+import { EMOJI_RULES } from "../const/emojis";
 import ISimulationController from "../ui/ISimulationController";
 import Coords from "../utils/classes/Coords";
 import Direction from "../utils/classes/Direction";
@@ -88,6 +89,14 @@ class EmojiController implements ISimulationController {
                 if(wrapperBounding_i.hasOverlay(wrapperBounding_j)) {
                     const val_i = wrapper_i.getValue();
                     const val_j = wrapper_j.getValue();
+                    const diff = EMOJI_RULES[val_i][val_j];
+                    if(diff > 0) {
+                        wrapper_j.setValue(val_i);
+                    } else if(diff < 0) {
+                        wrapper_i.setValue(val_j);
+                    } else {
+                        continue;
+                    }
                 }
             }
         }

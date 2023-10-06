@@ -10,7 +10,7 @@ import { EMOJIS } from "./const/emojis";
 import UIController from "./ui/UIController";
 import Timer from "./utils/classes/Timer";
 
-const VARIATION = 5;
+const VARIATION = 10;
 const MAX_EMOJI_SIZE = EMOJIS.length * VARIATION;
 
 const FACTORY = new EmojiWrapperFactory(
