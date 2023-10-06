@@ -59,7 +59,7 @@ export class BoundingSpace {
             [this.halfWidth, -this.halfHeight, Direction.NORTH_EAST],
             [this.halfWidth, this.halfHeight, Direction.SOUTH_EAST],
             [-this.halfWidth, this.halfHeight, Direction.SOUTH_WEST],
-        ].map((arr: [number, number, string]) => {
+        ].map((arr: [number, number, Direction]) => {
             const [offsetX, offsetY, dir] = arr;
             return new BoundingPoint(
                 this.center.offset(offsetX, offsetY), dir,
@@ -73,7 +73,7 @@ export class BoundingSpace {
             [this.halfWidth, 0, Direction.EAST],
             [0, this.halfHeight, Direction.SOUTH],
             [-this.halfWidth, 0, Direction.WEST],
-        ].map((arr: [number, number, string]) => {
+        ].map((arr: [number, number, Direction]) => {
             const [offsetX, offsetY, dir] = arr;
             return new BoundingPoint(
                 this.center.offset(offsetX, offsetY), dir,

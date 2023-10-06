@@ -80,7 +80,7 @@ class EmojiWrapper {
         return this.degrees;
     }
 
-    bounceBack(dir: string): Degrees {
+    bounceBack(dir: Direction): Degrees {
         const newValue = (() => {
             const value = this.degrees.degrees();
             if(value % Degrees.ONE_QUARTER_CICLE === 0) {

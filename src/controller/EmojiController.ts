@@ -5,7 +5,7 @@ import Direction from "../utils/classes/Direction";
 import { BoundingSpace } from "../wrapper/BoundingSpace";
 import EmojiWrapper from "../wrapper/EmojiWrapper";
 
-const BORDERS: [BoundingSpace, string][] = [
+const BORDERS: [BoundingSpace, Direction][] = [
     [
         BoundingSpace.fromTopLeft(
             Coords.of(0, 0), Canvas.BORDER, Canvas.HEIGHT,
@@ -29,8 +29,8 @@ const BORDERS: [BoundingSpace, string][] = [
     ],
 ];
 
-const countInBorders = (coords: Coords): string[] => {
-    const result: string[] = [];
+const countInBorders = (coords: Coords): Direction[] => {
+    const result: Direction[] = [];
     for(const [border, dir] of BORDERS) {
         if(border.containsPoint(coords)) {
             result.push(dir);
@@ -45,23 +45,15 @@ class EmojiController {
 
     private readonly canvas: ICanvas;
     private readonly wrappers: EmojiWrapper[];
-    private readonly wrapperKeys: Set<string>;
 
     constructor(canvas: ICanvas) {
         this.canvas = canvas;
         this.wrappers = [];
-        this.wrapperKeys = new Set();
     }
 
     register(wrapper: EmojiWrapper) {
-        const key = this.computeKey(wrapper);
-        if(this.wrapperKeys.has(key)) {
-            throw new Error("Duplicate key error");
-        }
-
         this.canvas.add(wrapper.getContainer());
         this.wrappers.push(wrapper);
-        this.wrapperKeys.add(key);
         wrapper.redraw();
     }
 
@@ -84,11 +76,6 @@ class EmojiController {
         setInterval(() => {
             this.nextStep();
         }, EmojiController.SIMULATION_TIMEOUT);
-    }
-
-    private computeKey(wrapper: EmojiWrapper): string {
-        const coords = wrapper.getCoords();
-        return coords.x + ":" + coords.y;
     }
 
 }
