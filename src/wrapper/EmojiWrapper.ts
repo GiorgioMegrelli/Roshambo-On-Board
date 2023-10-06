@@ -1,6 +1,7 @@
 import Canvas from "../canvas/Canvas";
 import Coords from "../utils/classes/Coords";
 import Degrees from "../utils/classes/Degrees";
+import Direction from "../utils/classes/Direction";
 import { px } from "../utils/functions/style-units";
 import { BoundingSpace } from "./BoundingSpace";
 
@@ -71,12 +72,38 @@ class EmojiWrapper {
         return this.coords.offset(offsetX, offsetY);
     }
 
-    bouncingBack(dir: string) {
-        console.log(
-            Degrees.bounceBack(
-                this.degrees, dir,
-            )
-        )
+    setDegrees(degrees: Degrees) {
+        this.degrees = degrees;
+    }
+
+    getDegrees(): Degrees {
+        return this.degrees;
+    }
+
+    bounceBack(dir: string): Degrees {
+        const newValue = (() => {
+            const value = this.degrees.degrees();
+            if(value % Degrees.ONE_QUARTER_CICLE === 0) {
+                return value;
+            }
+
+            switch(dir) {
+                case Direction.EAST:
+                    if(value < 90)
+                        return -value;
+                    if(value > 270)
+                        return 360 - value;
+                case Direction.SOUTH:
+                    return 180 - value;
+                case Direction.WEST:
+                    return 360 - value;
+                case Direction.NORTH:
+                    return 540 - value;
+            }
+
+            throw new Error("Unknown direction: " + dir);
+        })();
+        return Degrees.opposite(newValue);
     }
 
 }

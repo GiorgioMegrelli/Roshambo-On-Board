@@ -1,6 +1,10 @@
 import Direction from "./Direction";
 
 class Degrees {
+    static readonly ONE_QUARTER_CICLE = 90;
+    static readonly HALF_CICLE = 180;
+    static readonly TWO_QUARTER_CICLE = 270;
+    static readonly FULL_CICLE = 360;
     static readonly DIR_TO_DEGREES = {
         [Direction.NORTH]: 270,
         [Direction.EAST]: 0,
@@ -15,7 +19,7 @@ class Degrees {
     }
 
     private toRadians() {
-        return this.value * (Math.PI / 180);
+        return this.value * (Math.PI / Degrees.HALF_CICLE);
     }
 
     degrees() {
@@ -30,24 +34,21 @@ class Degrees {
         return Math.cos(this.toRadians());
     }
 
-    static bounceBack(degrees: Degrees, dir: string): Degrees {
-        if(!Degrees.DIR_TO_DEGREES.hasOwnProperty(dir)) {
-            throw new Error("Unknown direction: " + dir);
+    static of(value: number | Degrees): Degrees {
+        if(value instanceof Degrees) {
+            return new Degrees(value.degrees());
         }
+        return new Degrees(value);
+    }
 
-        const value = degrees.degrees();
-        const centerDegrees = Degrees.DIR_TO_DEGREES[dir];
-        switch(dir) {
-            case Direction.EAST:
-                break;
-            case Direction.SOUTH:
-                break;
-            case Direction.WEST:
-                break;
-            case Direction.NORTH:
-                break;
+    static opposite(value: number | Degrees): Degrees {
+        let degrees = (value instanceof Degrees)? value.degrees(): value;
+        if(degrees < Degrees.HALF_CICLE) {
+            degrees += Degrees.HALF_CICLE;
+        } else {
+            degrees -= Degrees.HALF_CICLE;
         }
-        return degrees;
+        return new Degrees(degrees);
     }
 
 }

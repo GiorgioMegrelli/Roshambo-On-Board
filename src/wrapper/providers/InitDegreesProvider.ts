@@ -6,9 +6,10 @@ export interface InitDegreesProvider {
 }
 
 export class D360InitDegreesProvider implements InitDegreesProvider {
+    private static readonly DIFF = 15;
+
     nextValue(): Degrees {
-        return new Degrees(
-            getRandomInt(360)
-        );
+        const scale = getRandomInt(360 / D360InitDegreesProvider.DIFF);
+        return Degrees.of(scale * D360InitDegreesProvider.DIFF);
     }
 }

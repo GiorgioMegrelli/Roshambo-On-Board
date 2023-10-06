@@ -29,7 +29,7 @@ const main = () => {
     FACTORY.createN(MAX_EMOJI_SIZE).forEach((wrapper) => {
         controller.register(wrapper);
     });
-    controller.nextStep();
+    controller.startSimulation();
 };
 
 window.addEventListener("load", main);

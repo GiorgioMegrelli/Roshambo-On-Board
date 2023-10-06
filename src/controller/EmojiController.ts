@@ -41,6 +41,7 @@ const countInBorders = (coords: Coords): string[] => {
 
 class EmojiController {
     static readonly OFFSET = 2;
+    static readonly SIMULATION_TIMEOUT = 25;
 
     private readonly canvas: ICanvas;
     private readonly wrappers: EmojiWrapper[];
@@ -65,21 +66,24 @@ class EmojiController {
     }
 
     nextStep() {
-        const interval = setInterval(() => {
-            this.wrappers.forEach((wrapper) => {
-                const nextCoords = wrapper.nextCoords(EmojiController.OFFSET);
-                const dirs = countInBorders(nextCoords);
-                if(dirs.length === 0) {
-                    wrapper.setCoords(nextCoords);
-                    wrapper.redraw();
-                } else {
-                    wrapper.bouncingBack(dirs[0]);
-                }
-            });
-        }, 40);
-        setTimeout(() => {
-            clearInterval(interval);
-        }, 7000);
+        for(const wrapper of this.wrappers) {
+            const nextCoords = wrapper.nextCoords(EmojiController.OFFSET);
+            const dirs = countInBorders(nextCoords);
+            if(dirs.length === 0) {
+                wrapper.setCoords(nextCoords);
+                wrapper.redraw();
+            } else {
+                wrapper.setDegrees(
+                    wrapper.bounceBack(dirs[0]),
+                );
+            }
+        }
+    }
+
+    startSimulation() {
+        setInterval(() => {
+            this.nextStep();
+        }, EmojiController.SIMULATION_TIMEOUT);
     }
 
     private computeKey(wrapper: EmojiWrapper): string {
