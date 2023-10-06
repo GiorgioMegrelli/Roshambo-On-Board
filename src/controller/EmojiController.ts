@@ -1,9 +1,12 @@
 import Canvas from "../canvas/Canvas";
 import ICanvas from "../canvas/ICanvas";
+import ISimulationController from "../ui/ISimulationController";
 import Coords from "../utils/classes/Coords";
 import Direction from "../utils/classes/Direction";
 import { BoundingSpace } from "../wrapper/BoundingSpace";
+import EmojiCounter from "../wrapper/EmojiCounter";
 import EmojiWrapper from "../wrapper/EmojiWrapper";
+import IEmojiStateChangeListener from "./IEmojiStateChangeListener";
 
 const BORDERS: [BoundingSpace, Direction][] = [
     [
@@ -39,22 +42,27 @@ const countInBorders = (coords: Coords): Direction[] => {
     return result;
 };
 
-class EmojiController {
+class EmojiController implements ISimulationController {
     static readonly OFFSET = 2;
     static readonly SIMULATION_TIMEOUT = 25;
 
     private readonly canvas: ICanvas;
-    private readonly wrappers: EmojiWrapper[];
+    private readonly wrappers: EmojiWrapper[] = [];
+    private readonly listeners: IEmojiStateChangeListener[] = [];
+    private simulationInterval: NodeJS.Timeout | null = null;
 
     constructor(canvas: ICanvas) {
         this.canvas = canvas;
-        this.wrappers = [];
     }
 
     register(wrapper: EmojiWrapper) {
         this.canvas.add(wrapper.getContainer());
         this.wrappers.push(wrapper);
         wrapper.redraw();
+    }
+
+    addListener(listener: IEmojiStateChangeListener) {
+        this.listeners.push(listener);
     }
 
     nextStep() {
@@ -70,12 +78,48 @@ class EmojiController {
                 );
             }
         }
+
+        for(let i = 0; i < this.wrappers.length; i++) {
+            const wrapper_i = this.wrappers[i];
+            const wrapperBounding_i = wrapper_i.getBoundingSpace();
+            for(let j = i + 1; j < this.wrappers.length; j++) {
+                const wrapper_j = this.wrappers[j];
+                const wrapperBounding_j = wrapper_j.getBoundingSpace();
+                if(wrapperBounding_i.hasOverlay(wrapperBounding_j)) {
+                    const val_i = wrapper_i.getValue();
+                    const val_j = wrapper_j.getValue();
+                }
+            }
+        }
+
+        this.invokeListeners();
     }
 
     startSimulation() {
-        setInterval(() => {
+        this.simulationInterval = setInterval(() => {
             this.nextStep();
         }, EmojiController.SIMULATION_TIMEOUT);
+    }
+
+    stop() {
+        if(this.simulationInterval !== null) {
+            clearInterval(this.simulationInterval);
+            this.simulationInterval = null;
+        }
+    }
+
+    isStopped(): boolean {
+        return this.simulationInterval === null;
+    }
+
+    getEmojiFrequencies(): EmojiCounter {
+        return new EmojiCounter(this.wrappers);
+    }
+
+    private invokeListeners() {
+        for(const listener of this.listeners) {
+            listener.update(this);
+        }
     }
 
 }

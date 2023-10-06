@@ -5,6 +5,15 @@ body {
     overflow: hidden;
 }
 
+.non-selectable {
+    -webkit-touch-callout: none;
+      -webkit-user-select: none;
+       -khtml-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+}
+
 #canvas {
     position: relative;
     display: block;
@@ -22,10 +31,50 @@ body {
     height: fit-content;
     font-size: 40px;
     text-align: center;
-    -webkit-touch-callout: none;
-      -webkit-user-select: none;
-       -khtml-user-select: none;
-         -moz-user-select: none;
-          -ms-user-select: none;
-              user-select: none;
+    z-index: 1;
+}
+
+#controls {
+    margin: 0;
+    height: 40px;
+    width: 340px;
+    opacity: 0.2;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    z-index: 10;
+}
+#controls:hover {
+    opacity: 0.8;
+}
+
+#controls-stop {
+    margin-left: 10px;
+    outline: none;
+    border: none;
+    font-size: 18px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background-color: #e7e7e7;
+    color: black;
+}
+#controls-stop:hover {
+    cursor: pointer;
+    background-color: #f44336;
+    color: white;
+}
+
+#controls-timer {
+    font-family: sans-serif;
+    font-size: 18px;
+    margin-left: 15px;
+}
+
+#controls-freqs {
+    font-family: sans-serif;
+    font-size: 17px;
+    margin-left: 20px;
+    white-space: nowrap;
 }

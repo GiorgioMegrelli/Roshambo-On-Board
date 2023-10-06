@@ -18,7 +18,7 @@ class EmojiWrapper {
     ) {
         this.value = initValue;
         this.container = document.createElement("div");
-        this.container.setAttribute("class", "canvas-emoji");
+        this.container.classList.add("canvas-emoji", "non-selectable");
         this.container.innerHTML = initValue;
         this.coords = coords;
         this.degrees = degrees;
