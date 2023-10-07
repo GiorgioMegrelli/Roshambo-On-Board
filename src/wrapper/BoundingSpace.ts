@@ -9,6 +9,11 @@ export class BoundingPoint {
         this.point = point;
         this.dir = dir;
     }
+
+    static from(coords: Coords): BoundingPoint {
+        return new BoundingPoint(coords, Direction.NONE);
+    }
+
 }
 
 export class BoundingSpace {
@@ -38,9 +43,13 @@ export class BoundingSpace {
     }
 
     hasOverlay(other: BoundingSpace): boolean {
-        const otherCorners = other.getCorners();
-        for(let i = 0; i < otherCorners.length; i++) {
-            if(this.containsPoint(otherCorners[i])) {
+        const otherPoints: BoundingPoint[] = [
+            ...other.getCorners(),
+            ...other.getEdges(),
+            BoundingPoint.from(other.center),
+        ];
+        for(const otherPoint of otherPoints) {
+            if(this.containsPoint(otherPoint)) {
                 return true;
             }
         }
