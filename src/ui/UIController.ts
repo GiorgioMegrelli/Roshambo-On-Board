@@ -7,6 +7,9 @@ class UIController implements TimerListener, IEmojiStateChangeListener {
     private readonly button: HTMLElement;
     private readonly timerOutput: HTMLElement;
     private readonly freqsOutput: HTMLElement;
+    private readonly winnerView: HTMLElement;
+    private readonly winnerViewText: HTMLElement;
+    private readonly timer = new Timer();
 
     constructor(invokable: ISimulationController) {
         this.button = document.getElementById("controls-stop");
@@ -17,6 +20,11 @@ class UIController implements TimerListener, IEmojiStateChangeListener {
         this.timerOutput.setAttribute("class", "non-selectable");
         this.freqsOutput = document.getElementById("controls-freqs");
         this.freqsOutput.setAttribute("class", "non-selectable");
+        this.winnerView = document.getElementById("winner-view");
+        this.winnerViewText = document.getElementById("winner-view-text");
+        this.winnerViewText.setAttribute("class", "non-selectable");
+        this.timer.addListener(this);
+        this.timer.start();
     }
 
     timeUpdate(timer: Timer) {
@@ -24,12 +32,23 @@ class UIController implements TimerListener, IEmojiStateChangeListener {
     }
 
     update(simulationController: ISimulationController) {
-        const freqs = simulationController.getEmojiFrequencies().getFrequencies();
-        const sb = [];
-        for(const emoji of EMOJIS) {
-            sb.push(emoji + " " + freqs[emoji]);
+        const freqs = simulationController.getEmojiFrequencies().getFrequencies();        
+        this.freqsOutput.innerHTML = EMOJIS.map((emoji) => {
+            return emoji + " " + freqs[emoji];
+        }).join(" | ");
+
+        if(simulationController.isStopped()) {
+            const winner = simulationController.getWinner();
+            this.timer.stop();
+            if(winner !== null) {
+                this.showResult(winner);
+            }
         }
-        this.freqsOutput.innerHTML = sb.join(" | ");
+    }
+
+    private showResult(winner: string) {
+        this.winnerViewText.innerHTML = "Winner: " + winner;
+        this.winnerView.style.display = "block";
     }
 
 }

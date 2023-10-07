@@ -101,10 +101,10 @@ class EmojiController implements ISimulationController {
             }
         }
 
-        this.invokeListeners();
-        if(this.isWin()) {
+        if(this.getWinner() !== null) {
             this.stop();
         }
+        this.invokeListeners();
     }
 
     startSimulation() {
@@ -128,18 +128,24 @@ class EmojiController implements ISimulationController {
         return new EmojiCounter(this.wrappers);
     }
 
+    getWinner(): string | null {
+        const freqs = this.getEmojiFrequencies().getFrequencies();
+        const filtered = Object.entries(freqs).filter((val) => {
+            const [_, freq] = val;
+            return freq === this.wrappers.length;
+        }).map((val) => {
+            return val[0];
+        });
+        if(filtered.length === 0) {
+            return null;
+        }
+        return filtered[0];
+    }
+
     private invokeListeners() {
         for(const listener of this.listeners) {
             listener.update(this);
         }
-    }
-
-    private isWin(): boolean {
-        const freqs = this.getEmojiFrequencies().getFrequencies();
-        return Object.entries(freqs).some((val) => {
-            const [_, freq] = val;
-            return freq === this.wrappers.length;
-        });
     }
 
 }

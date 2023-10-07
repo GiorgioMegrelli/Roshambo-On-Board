@@ -4,6 +4,7 @@ interface ISimulationController {
     stop();
     isStopped(): boolean;
     getEmojiFrequencies(): EmojiCounter;
+    getWinner(): string | null;
 }
 
 export default ISimulationController;

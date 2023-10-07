@@ -8,7 +8,6 @@ import { CyclicInitValueProvider } from "./wrapper/providers/InitEmojiProvider";
 import EmojiWrapperFactory from "./wrapper/EmojiWrapperFactory";
 import { EMOJIS } from "./const/emojis";
 import UIController from "./ui/UIController";
-import Timer from "./utils/classes/Timer";
 
 const VARIATION = 10;
 const MAX_EMOJI_SIZE = EMOJIS.length * VARIATION;
@@ -27,13 +26,9 @@ const FACTORY = new EmojiWrapperFactory(
 const main = () => {
     const canvas: ICanvas = new Canvas();
     const controller = new EmojiController(canvas);
-
     const uiController = new UIController(controller);
-    const timer = new Timer();
 
     controller.addListener(uiController);
-    timer.addListener(uiController);
-    timer.start();
 
     FACTORY.createN(MAX_EMOJI_SIZE).forEach((wrapper) => {
         controller.register(wrapper);
