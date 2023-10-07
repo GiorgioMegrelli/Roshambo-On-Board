@@ -3,6 +3,7 @@ import ICanvas from "../canvas/ICanvas";
 import { EMOJI_RULES } from "../const/emojis";
 import ISimulationController from "../ui/ISimulationController";
 import Coords from "../utils/classes/Coords";
+import Degrees from "../utils/classes/Degrees";
 import Direction from "../utils/classes/Direction";
 import { BoundingSpace } from "../wrapper/BoundingSpace";
 import EmojiCounter from "../wrapper/EmojiCounter";
@@ -86,6 +87,14 @@ class EmojiController implements ISimulationController {
                     wrapperRight.setValue(valLeft);
                 } else if(diff < 0) {
                     wrapperLeft.setValue(valRight);
+                }
+                if(diff !== 0) {
+                    wrapperLeft.setDegrees(
+                        Degrees.opposite(wrapperLeft.getDegrees()),
+                    );
+                    wrapperRight.setDegrees(
+                        Degrees.opposite(wrapperRight.getDegrees()),
+                    );
                 }
             }
         }
