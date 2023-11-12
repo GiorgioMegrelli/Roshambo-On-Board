@@ -4,6 +4,10 @@ Project is inspired (I copied idea) by the [tweet](https://x.com/juanbuis/status
 
 ![Simulation Video](/media/ScreenVideo.gif)
 
+<i>Wait for the example gif (it loads slowly)</i>
+
+</br>
+
 Build project with:
 ```Shell
 npm run build
